@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Афины</title>
+<meta name="description" content="Простой путеводитель по Афинам на 2,5 дня">
+<meta name="theme-color" content="#0d4c92">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Афины">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+  :root {
+    --blue: #0d4c92;
+    --blue-dark: #083566;
+    --blue-soft: #e4eef9;
+    --bg: #fbf7ef;
+    --card: #ffffff;
+    --ink: #1a1a1a;
+    --muted: #4a4a4a;
+    --line: #e2dccf;
+    --green: #1e7a3c;
+    --green-soft: #e3f3e7;
+    --red: #b3261e;
+    --sand: #f3ead6;
+    --fs: 20px;
+  }
+  html.big { --fs: 24px; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { font-size: var(--fs); }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.45; -webkit-text-size-adjust: 100%;
+  }
+  main { max-width: 640px; margin: 0 auto; padding: 16px 16px calc(120px + env(safe-area-inset-bottom)); }
+  h1 { font-size: 2rem; margin: 8px 0 4px; color: var(--blue-dark); }
+  h2 { font-size: 1.45rem; margin: 0 0 4px; line-height: 1.25; }
+  h3 { font-size: 1.15rem; margin: 24px 0 10px; color: var(--blue-dark); }
+  p { margin: 0 0 10px; }
+  .sub { color: var(--muted); font-size: 1rem; margin-bottom: 20px; }
+
+  /* Buttons: everything tappable is big */
+  .btn {
+    display: flex; align-items: center; gap: 14px; width: 100%;
+    min-height: 64px; padding: 14px 18px; margin: 0 0 12px;
+    font: inherit; font-size: 1.1rem; font-weight: 600; text-align: left; text-decoration: none;
+    color: var(--ink); background: var(--card); border: 2px solid var(--line); border-radius: 16px;
+    cursor: pointer;
+  }
+  .btn:active { transform: scale(.98); }
+  .btn .ico { font-size: 1.7rem; line-height: 1; flex: none; width: 2rem; text-align: center; }
+  .btn.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .btn.green { background: var(--green); color: #fff; border-color: var(--green); }
+  .btn.red { background: var(--red); color: #fff; border-color: var(--red); }
+  .btn.center { justify-content: center; text-align: center; }
+
+  /* Day cards on home */
+  .day {
+    display: block; width: 100%; padding: 18px; margin: 0 0 14px; text-align: left;
+    font: inherit; color: var(--ink); text-decoration: none;
+    background: var(--card); border: 2px solid var(--line); border-radius: 20px; cursor: pointer;
+  }
+  .day.today { border: 4px solid var(--blue); }
+  .day .row { display: flex; align-items: center; gap: 14px; }
+  .day .big-ico { font-size: 2.6rem; line-height: 1; }
+  .day .label { font-size: 1.5rem; font-weight: 800; color: var(--blue-dark); }
+  .day .what { font-size: 1.05rem; color: var(--muted); }
+  .badge { display: inline-block; margin-top: 10px; padding: 4px 12px; border-radius: 99px; font-size: .9rem; font-weight: 700; background: var(--sand); }
+  .badge.today { background: var(--blue); color: #fff; margin: 0 0 8px; }
+  .badge.done { background: var(--green-soft); color: var(--green); }
+
+  /* Stop cards */
+  .stop { background: var(--card); border: 2px solid var(--line); border-radius: 20px; padding: 18px; margin: 0 0 18px; }
+  .stop.is-done { border-color: var(--green); background: #f6fbf7; }
+  .stop-head { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 10px; }
+  .num {
+    flex: none; width: 2.4rem; height: 2.4rem; border-radius: 50%;
+    display: grid; place-items: center; font-weight: 800; font-size: 1.2rem;
+    background: var(--blue); color: #fff;
+  }
+  .is-done .num { background: var(--green); }
+  .time { font-size: 1rem; font-weight: 700; color: var(--blue); }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 12px; }
+  .facts span { background: var(--sand); padding: 4px 12px; border-radius: 99px; font-size: .95rem; font-weight: 600; }
+  .how { background: var(--blue-soft); border-radius: 14px; padding: 12px 14px; margin: 0 0 12px; font-size: 1rem; }
+  .tips { margin: 0 0 14px; padding: 0; list-style: none; }
+  .tips li { position: relative; padding-left: 1.6rem; margin-bottom: 8px; font-size: 1rem; }
+  .tips li::before { content: "•"; position: absolute; left: .4rem; color: var(--blue); font-weight: 900; }
+  .optional { display: inline-block; background: #fff4d6; color: #7a5200; font-weight: 700; font-size: .9rem; padding: 2px 10px; border-radius: 99px; margin-bottom: 6px; }
+
+  /* Sticky bottom bar on inner screens */
+  .bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+    display: flex; gap: 10px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+    background: rgba(251, 247, 239, .97); border-top: 2px solid var(--line);
+  }
+  .bar .btn { margin: 0; min-height: 60px; padding: 10px 8px; gap: 8px; justify-content: center; font-size: 1.05rem; white-space: nowrap; }
+  .bar .btn .ico { width: auto; font-size: 1.4rem; }
+
+  .back {
+    display: inline-flex; align-items: center; gap: 8px; margin: 0 0 10px; padding: 10px 16px 10px 10px;
+    font: inherit; font-size: 1.05rem; font-weight: 700; color: var(--blue); background: none; border: none; cursor: pointer;
+  }
+
+  /* Phrases */
+  .phrase { background: var(--card); border: 2px solid var(--line); border-radius: 16px; padding: 14px 16px; margin-bottom: 10px; }
+  .phrase .ru { font-size: 1rem; color: var(--muted); }
+  .phrase .say { font-size: 1.4rem; font-weight: 800; color: var(--blue-dark); }
+  .phrase .gr { font-size: 1rem; color: var(--muted); }
+
+  .note { background: #fff4d6; border-radius: 14px; padding: 12px 14px; margin: 0 0 14px; font-size: 1rem; }
+
+  /* Full-screen taxi card */
+  .taxi { position: fixed; inset: 0; z-index: 20; background: #fff; overflow: auto;
+    display: flex; flex-direction: column; padding: 20px 20px calc(20px + env(safe-area-inset-bottom)); }
+  .taxi .hint { font-size: 1rem; color: var(--muted); text-align: center; margin-bottom: 18px; }
+  .taxi .please { font-size: 1.6rem; font-weight: 700; text-align: center; margin-bottom: 18px; }
+  .taxi .dest { font-size: 2.3rem; font-weight: 800; line-height: 1.2; text-align: center; color: #000; margin-bottom: 16px; word-wrap: break-word; }
+  .taxi .latin { font-size: 1.2rem; text-align: center; color: var(--muted); margin-bottom: 24px; }
+  .taxi .spacer { flex: 1; }
+</style>
+</head>
+<body>
+<main id="app"></main>
+
+<script>
+/* ================================================================
+   НАСТРОЙКИ — заполните перед тем, как отдать телефон маме.
+   ================================================================ */
+const CONFIG = {
+  familyName: '',       // например: 'Саша'  — кнопка «Позвонить …» появится, если указан телефон
+  familyPhone: '',      // например: '+31612345678'
+  tripStart: '',        // первый день поездки, формат 'ГГГГ-ММ-ДД', например '2026-10-20' — подсветит «Сегодня»
+};
+
+const HOTEL = {
+  name: 'Отель Марина',
+  phone: '+302105200660',
+  phoneShown: '+30 210 52 00 660',
+  maps: 'Hotel Marina, Voulgari 13, Athina 104 37',
+  greek: 'Ξενοδοχείο Marina<br>Βούλγαρη 13, Ομόνοια',
+  latin: 'Hotel Marina, Voulgari 13, Omonia',
+};
+
+const DAYS = [
+  {
+    label: 'День 1', ico: '🏛️', what: 'Акрополь и старый город Плака',
+    stops: [
+      {
+        id: 'acropolis', ico: '🏛️', time: '08:30', title: 'Акрополь и Парфенон',
+        text: 'Главное чудо Афин — древние храмы на холме, которым почти 2500 лет. Сверху виден весь город.',
+        facts: ['⏱ 2 часа', '💶 30 €'],
+        how: 'Метро: <b>красная линия</b> от станции «Омония» до станции «Акрополи» — 3 остановки. Или такси — около 8 €.',
+        tips: [
+          'Приезжайте к открытию — утром прохладно и меньше людей.',
+          'Билет лучше купить заранее на сайте hhticket.gr (попросите детей помочь).',
+          'Идите к <b>южному входу</b> — он рядом с метро и Музеем Акрополя, там меньше очередь.',
+          'Удобная обувь обязательна — древний мрамор скользкий, много подъёмов.',
+          'Возьмите воду, шляпу и солнечные очки. Наверху почти нет тени.',
+        ],
+        nav: 'Theatre of Dionysus, Athens', mode: 'transit',
+        greek: 'Ακρόπολη<br>νότια είσοδος', latin: 'Acropolis, South entrance (Dionysiou Areopagitou)',
+      },
+      {
+        id: 'museum', ico: '🏺', time: '11:00', title: 'Музей Акрополя и обед',
+        text: 'Красивый современный музей у подножия холма. Здесь настоящие статуи с Акрополя, а под стеклянным полом видны раскопки древнего города.',
+        facts: ['⏱ 2 часа', '💶 20 €'],
+        how: 'Пешком 5 минут вниз от южного выхода с Акрополя.',
+        tips: [
+          'Внутри есть лифты, скамейки и чистые туалеты — хорошо отдохнуть после холма.',
+          'На 2-м этаже — <b>кафе-ресторан с террасой и видом на Парфенон</b>. Отличное место для обеда!',
+          'По понедельникам музей закрывается рано — в 17:00.',
+        ],
+        nav: 'Acropolis Museum, Athens', mode: 'walking',
+        greek: 'Μουσείο Ακρόπολης<br>Διονυσίου Αρεοπαγίτου 15', latin: 'Acropolis Museum, Dionysiou Areopagitou 15',
+      },
+      {
+        id: 'plaka', ico: '🌺', time: '14:00', title: 'Прогулка по Плаке',
+        text: 'Самый старый и уютный район Афин: узкие улочки, цветы, сувенирные лавки и таверны.',
+        facts: ['⏱ 1–2 часа', '💶 бесплатно'],
+        how: 'Пешком 5–10 минут от музея.',
+        tips: [
+          'Самое красивое — на улицах <b>Кидатинеон</b> (Kydathineon) и <b>Адриану</b> (Adrianou).',
+          'Попробуйте <b>лукумадес</b> — горячие пончики с мёдом, и холодный кофе <b>фредо</b>.',
+          'Хорошие подарки: оливковое масло, греческий мёд, косметика с оливой.',
+          'Если остались силы — поднимитесь в <b>Анафиотику</b>: белые домики, как на островах. Но там много ступенек!',
+        ],
+        nav: 'Kydathineon, Plaka, Athens', mode: 'walking',
+        greek: 'Πλάκα<br>οδός Κυδαθηναίων', latin: 'Plaka, Kydathineon street',
+      },
+      {
+        id: 'rest1', ico: '🛏️', time: '16:30', title: 'Отдых в отеле',
+        text: 'Вернитесь в отель и отдохните. Вечером можно снова поехать в Плаку на ужин — вечером там очень красиво, а Акрополь подсвечен.',
+        facts: ['🚕 около 8 €'],
+        how: 'Удобнее всего на такси — 15 минут. Нажмите «Показать таксисту».',
+        tips: [
+          'Вечером по району Омония (где отель) лучше ездить на такси, а не гулять пешком.',
+        ],
+        nav: HOTEL.maps, mode: 'transit',
+        greek: HOTEL.greek, latin: HOTEL.latin,
+      },
+    ],
+  },
+  {
+    label: 'День 2', ico: '🏟️', what: 'Смена караула, стадион и Монастираки',
+    stops: [
+      {
+        id: 'guard', ico: '💂', time: '10:45', title: 'Смена караула у парламента',
+        text: 'Гвардейцы-эвзоны в юбочках и туфлях с помпонами торжественно меняются каждый час. Очень красиво и необычно!',
+        facts: ['⏱ 30 минут', '💶 бесплатно'],
+        how: 'Метро: <b>красная линия</b> от «Омония» до «Синтагма» — 2 остановки. Или такси — около 6 €.',
+        tips: [
+          'Смена — каждый час ровно (10:00, 11:00, 12:00…). Приходите за 10–15 минут, чтобы встать впереди.',
+          'В <b>воскресенье в 11:00</b> — большая праздничная церемония с оркестром.',
+          'Напротив — площадь Синтагма, там кафе и туалет на станции метро.',
+        ],
+        nav: 'Tomb of the Unknown Soldier, Athens', mode: 'transit',
+        greek: 'Πλατεία Συντάγματος<br>Άγνωστος Στρατιώτης', latin: 'Syntagma Square, Tomb of the Unknown Soldier',
+      },
+      {
+        id: 'garden', ico: '🌳', time: '11:30', title: 'Национальный сад',
+        text: 'Тенистый парк прямо за парламентом: пальмы, пруды с утками и черепахами, много скамеек.',
+        facts: ['⏱ 45 минут', '💶 бесплатно'],
+        how: 'Пешком 2 минуты — вход в сад слева от парламента.',
+        tips: [
+          'Идите через сад к дворцу <b>Заппион</b> — красивое здание с колоннами.',
+          'В саду есть кафе и туалеты.',
+        ],
+        nav: 'National Garden, Athens', mode: 'walking',
+        greek: 'Εθνικός Κήπος', latin: 'National Garden',
+      },
+      {
+        id: 'stadium', ico: '🏟️', time: '12:15', title: 'Мраморный стадион',
+        text: 'Единственный в мире стадион целиком из белого мрамора. Здесь в 1896 году прошли первые современные Олимпийские игры.',
+        facts: ['⏱ 1 час', '💶 12 €'],
+        how: 'Пешком 10 минут через сад, мимо Заппиона.',
+        tips: [
+          'В билет входит аудиогид — спросите, есть ли на русском.',
+          'Можно встать на пьедестал почёта и сделать фото!',
+        ],
+        nav: 'Panathenaic Stadium, Athens', mode: 'walking',
+        greek: 'Παναθηναϊκό Στάδιο<br>(Καλλιμάρμαρο)', latin: 'Panathenaic Stadium (Kallimarmaro)',
+      },
+      {
+        id: 'zeus', ico: '🏛️', time: '13:30', title: 'Храм Зевса и арка Адриана',
+        text: 'Огромные колонны древнего храма Зевса и арка римского императора. Хорошо видно и из-за ограды — можно не заходить внутрь.',
+        facts: ['⏱ 20 минут', '💶 снаружи бесплатно'],
+        how: 'Пешком 10 минут от стадиона.',
+        tips: [
+          'Лучшее фото — у арки Адриана, с колоннами на фоне.',
+        ],
+        nav: 'Temple of Olympian Zeus, Athens', mode: 'walking',
+        greek: 'Ναός Ολυμπίου Διός<br>Πύλη του Αδριανού', latin: 'Temple of Olympian Zeus, Hadrian\'s Arch',
+      },
+      {
+        id: 'monastiraki', ico: '🛍️', time: '14:00', title: 'Монастираки: обед и рынок',
+        text: 'Шумная площадь с видом на Акрополь, блошиный рынок и знаменитые сувлаки — греческие шашлычки в лепёшке.',
+        facts: ['⏱ 2 часа'],
+        how: 'Такси — около 6 €. Или пешком 20 минут через Плаку.',
+        tips: [
+          'Сувлаки — на улице <b>Митрополеос</b> у площади: таверны «Танасис», «Байрактарис», «Саввас».',
+          'Блошиный рынок — улочки <b>Ифестоу</b> и <b>Пандросу</b>: сувениры, кожаные сандалии, украшения.',
+          'В толпе держите сумку перед собой — здесь бывают карманники.',
+        ],
+        nav: 'Monastiraki Square, Athens', mode: 'transit',
+        greek: 'Πλατεία Μοναστηρακίου', latin: 'Monastiraki Square',
+      },
+      {
+        id: 'agora', ico: '🏛️', time: '16:00', title: 'Древняя Агора', optional: true,
+        text: 'Главная площадь древних Афин, где гулял Сократ. Здесь стоит храм Гефеста — лучше всех сохранившийся древний храм Греции.',
+        facts: ['⏱ 1 час', '💶 20 €'],
+        how: 'Пешком 5 минут от площади Монастираки.',
+        tips: [
+          'Только если остались силы — можно спокойно пропустить.',
+          'Много тени и скамеек.',
+        ],
+        nav: 'Ancient Agora of Athens', mode: 'walking',
+        greek: 'Αρχαία Αγορά', latin: 'Ancient Agora',
+      },
+      {
+        id: 'sunset', ico: '🌅', time: '18:00', title: 'Ужин на крыше с видом на Акрополь',
+        text: 'Закат над Акрополем — лучшее завершение дня.',
+        facts: ['⏱ 1–2 часа'],
+        how: 'Кафе на крышах — прямо у площади Монастираки.',
+        tips: [
+          'Например, <b>«A for Athens»</b> или <b>«360»</b> — оба у площади Монастираки.',
+          'В конце октября солнце садится около 17:30–18:30. Приходите заранее, чтобы занять столик.',
+          'Домой — на такси (около 6 €, 10 минут).',
+        ],
+        nav: 'A for Athens, Miaouli 2, Athens', mode: 'walking',
+        greek: 'Πλατεία Μοναστηρακίου', latin: 'Monastiraki Square',
+      },
+    ],
+  },
+  {
+    label: 'День 3', ico: '🚡', what: 'Полдня: вид с горы, рынок и аэропорт',
+    stops: [
+      {
+        id: 'lycabettus', ico: '🚡', time: '09:30', title: 'Гора Ликабетт — вид на весь город',
+        text: 'Самая высокая точка Афин. Наверх везёт фуникулёр — идти пешком не нужно. Сверху видно Акрополь, весь город и море.',
+        facts: ['⏱ 1,5 часа', '💶 10 € туда-обратно'],
+        how: 'Лучше на такси (около 8 €) до <b>нижней станции фуникулёра</b> — покажите таксисту адрес.',
+        tips: [
+          'Фуникулёр едет 3 минуты, ходит каждые полчаса.',
+          'Наверху — белая церковь Святого Георгия и кафе с террасой.',
+        ],
+        nav: 'Lycabettus Funicular, Aristippou 1, Athens', mode: 'transit',
+        greek: 'Τελεφερίκ Λυκαβηττού<br>Αριστίππου 1, Κολωνάκι', latin: 'Lycabettus Funicular, Aristippou 1, Kolonaki',
+      },
+      {
+        id: 'market', ico: '🫒', time: '11:30', title: 'Центральный рынок',
+        text: 'Настоящий греческий рынок в 5 минутах от отеля: оливки, сыр фета, мёд, специи, орехи. Хорошие подарки домой.',
+        facts: ['⏱ 1 час', '📍 рядом с отелем'],
+        how: 'Такси от горы — около 8 €. От отеля — 5 минут пешком.',
+        tips: [
+          'Рынок на улице <b>Афинас</b>. Работает с понедельника по субботу, <b>в воскресенье закрыт</b>.',
+          'Мясные и рыбные ряды шумные — лавки с оливками и специями через дорогу.',
+          'Возьмите наличные — в маленьких лавках карты принимают не всегда.',
+        ],
+        nav: 'Varvakios Agora, Athinas, Athens', mode: 'walking',
+        greek: 'Βαρβάκειος Αγορά<br>(Κεντρική Αγορά), Αθηνάς', latin: 'Central Market (Varvakios), Athinas street',
+      },
+      {
+        id: 'airport', ico: '✈️', time: '13:00', title: 'Отель → аэропорт',
+        text: 'Заберите вещи в отеле и поезжайте в аэропорт.',
+        facts: ['🚕 50 €', '⏱ 40–50 минут'],
+        how: 'Попросите на ресепшене вызвать такси заранее.',
+        tips: [
+          'Выезжайте <b>за 3 часа до вылета</b>.',
+          'У такси в аэропорт <b>фиксированная цена</b>: 50 € днём, 65 € ночью (с 0:00 до 5:00). Больше платить не нужно.',
+        ],
+        nav: 'Athens International Airport', mode: 'driving',
+        greek: 'Αεροδρόμιο<br>«Ελευθέριος Βενιζέλος»', latin: 'Athens International Airport',
+      },
+    ],
+  },
+];
+
+const PHRASES = [
+  ['Здравствуйте', 'Я́сас', 'Γειά σας'],
+  ['Спасибо', 'Эфхаристо́', 'Ευχαριστώ'],
+  ['Пожалуйста', 'Паракало́', 'Παρακαλώ'],
+  ['Да', 'Нэ', 'Ναι'],
+  ['Нет', 'О́хи', 'Όχι'],
+  ['Счёт, пожалуйста', 'Тон логариазмо́, паракало́', 'Τον λογαριασμό, παρακαλώ'],
+  ['Вода', 'Неро́', 'Νερό'],
+  ['Где туалет?', 'Пу и́нэ и туалэ́та?', 'Πού είναι η τουαλέτα;'],
+  ['Сколько стоит?', 'По́со ка́ни?', 'Πόσο κάνει;'],
+  ['Можно картой?', 'Боро́ мэ ка́рта?', 'Μπορώ με κάρτα;'],
+];
+
+/* ================================================================ */
+
+const app = document.getElementById('app');
+const doneKey = 'athens-done';
+const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } };
+const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+let done = load(doneKey, {});
+if (load('athens-big', false)) document.documentElement.classList.add('big');
+
+const mapsUrl = (dest, mode) =>
+  'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(dest) + '&travelmode=' + (mode || 'transit');
+
+function todayIndex() {
+  if (!CONFIG.tripStart) return -1;
+  const start = new Date(CONFIG.tripStart + 'T00:00:00');
+  const now = new Date(); now.setHours(0, 0, 0, 0);
+  const i = Math.round((now - start) / 86400000);
+  return i >= 0 && i < DAYS.length ? i : -1;
+}
+
+const backBtn = (to = '#') => `<button class="back" onclick="go('${to}')">← Назад</button>`;
+const bar = () => `
+  <nav class="bar">
+    <a class="btn" href="#"><span class="ico">🏠</span>Главная</a>
+    <a class="btn primary" href="#hotel"><span class="ico">🏨</span>В отель</a>
+  </nav>`;
+
+function home() {
+  const t = todayIndex();
+  const days = DAYS.map((d, i) => {
+    const n = d.stops.filter(s => done[s.id]).length;
+    return `
+      <a class="day ${i === t ? 'today' : ''}" href="#day/${i}">
+        ${i === t ? '<span class="badge today">Сегодня</span>' : ''}
+        <div class="row">
+          <span class="big-ico">${d.ico}</span>
+          <div>
+            <div class="label">${d.label}</div>
+            <div class="what">${d.what}</div>
+          </div>
+        </div>
+        ${n ? `<span class="badge ${n === d.stops.length ? 'done' : ''}">✓ Посетили ${n} из ${d.stops.length}</span>` : ''}
+      </a>`;
+  }).join('');
+  return `
+    <h1>Афины 🇬🇷</h1>
+    <p class="sub">Ваша поездка на 2,5 дня. Выберите день:</p>
+    ${days}
+    <h3>Если нужна помощь</h3>
+    <a class="btn primary" href="#hotel"><span class="ico">🏨</span>Вернуться в отель</a>
+    <a class="btn" href="#taxi/hotel"><span class="ico">🚕</span>Адрес отеля для таксиста</a>
+    <a class="btn" href="#help"><span class="ico">📞</span>Телефоны и помощь</a>
+    <a class="btn" href="#words"><span class="ico">💬</span>Греческие слова</a>
+    ${installHint()}`;
+}
+
+function day(i) {
+  const d = DAYS[i];
+  if (!d) return home();
+  const stops = d.stops.map((s, k) => `
+    <section class="stop ${done[s.id] ? 'is-done' : ''}">
+      <div class="stop-head">
+        <div class="num">${done[s.id] ? '✓' : k + 1}</div>
+        <div>
+          ${s.optional ? '<span class="optional">По желанию</span>' : ''}
+          <div class="time">${s.time}</div>
+          <h2>${s.ico} ${s.title}</h2>
+        </div>
+      </div>
+      <p>${s.text}</p>
+      <div class="facts">${s.facts.map(f => `<span>${f}</span>`).join('')}</div>
+      <div class="how">🧭 ${s.how}</div>
+      <ul class="tips">${s.tips.map(t => `<li>${t}</li>`).join('')}</ul>
+      <a class="btn primary" href="${mapsUrl(s.nav, s.mode)}" target="_blank" rel="noopener"><span class="ico">🗺️</span>Как добраться (карта)</a>
+      <a class="btn" href="#taxi/${s.id}"><span class="ico">🚕</span>Показать таксисту</a>
+      <button class="btn ${done[s.id] ? 'green' : ''}" onclick="toggleDone('${s.id}')">
+        <span class="ico">${done[s.id] ? '✅' : '⬜'}</span>${done[s.id] ? 'Готово — я здесь была' : 'Отметить: я здесь была'}
+      </button>
+    </section>`).join('');
+  return `
+    ${backBtn()}
+    <h1>${d.ico} ${d.label}</h1>
+    <p class="sub">${d.what}. Идите по порядку, сверху вниз. Время — примерное, не спешите!</p>
+    ${stops}
+    ${i + 1 < DAYS.length ? `<a class="btn center" href="#day/${i + 1}">Следующий день →</a>` : ''}
+    ${bar()}`;
+}
+
+function hotel() {
+  return `
+    ${backBtn()}
+    <h1>🏨 Вернуться в отель</h1>
+    <p class="sub">${HOTEL.name}, улица Вулгари 13 — в 2 минутах от метро «Омония».</p>
+    <a class="btn primary" href="#taxi/hotel"><span class="ico">🚕</span>Поехать на такси — показать адрес</a>
+    <a class="btn" href="${mapsUrl(HOTEL.maps, 'transit')}" target="_blank" rel="noopener"><span class="ico">🚇</span>Маршрут на метро (карта)</a>
+    <a class="btn" href="${mapsUrl(HOTEL.maps, 'walking')}" target="_blank" rel="noopener"><span class="ico">🚶‍♀️</span>Маршрут пешком (карта)</a>
+    <a class="btn" href="tel:${HOTEL.phone}"><span class="ico">📞</span>Позвонить в отель</a>
+    <div class="note">Метро рядом с отелем — станция <b>«Омония»</b> (Ομόνοια). Там встречаются красная и зелёная линии.</div>
+    ${bar()}`;
+}
+
+function help() {
+  const fam = CONFIG.familyPhone
+    ? `<a class="btn green" href="tel:${CONFIG.familyPhone}"><span class="ico">❤️</span>Позвонить ${CONFIG.familyName || 'родным'}</a>` : '';
+  return `
+    ${backBtn()}
+    <h1>📞 Помощь</h1>
+    ${fam}
+    <a class="btn" href="tel:${HOTEL.phone}"><span class="ico">🏨</span>Отель: ${HOTEL.phoneShown}</a>
+    <a class="btn red" href="tel:112"><span class="ico">🆘</span>Скорая, полиция: 112</a>
+    <a class="btn" href="tel:1571"><span class="ico">👮</span>Туристическая полиция: 1571</a>
+    <p class="sub">По номерам 112 и 1571 говорят по-английски.</p>
+
+    <h3>Полезно знать</h3>
+    <ul class="tips">
+      <li>Вода из-под крана в Афинах — питьевая.</li>
+      <li>Такси по центру недорогое: обычно 5–10 €. Можно платить картой — скажите водителю заранее: «ка́рта».</li>
+      <li>Аптека — вывеска с <b>зелёным крестом</b>.</li>
+      <li>Чаевые в кафе — округлите сумму или оставьте 5–10 %.</li>
+      <li>Часы работы музеев осенью меняются — если сомневаетесь, спросите на ресепшене.</li>
+    </ul>
+
+    <h3>Размер текста</h3>
+    <button class="btn" onclick="toggleBig()"><span class="ico">🔍</span>${document.documentElement.classList.contains('big') ? 'Сделать текст обычным' : 'Сделать текст крупнее'}</button>
+    ${bar()}`;
+}
+
+function words() {
+  return `
+    ${backBtn()}
+    <h1>💬 Греческие слова</h1>
+    <div class="note">Внимание: «<b>Нэ</b>» по-гречески значит «<b>ДА</b>», а не «нет»!</div>
+    ${PHRASES.map(([ru, say, gr]) => `
+      <div class="phrase">
+        <div class="ru">${ru}</div>
+        <div class="say">${say}</div>
+        <div class="gr">${gr}</div>
+      </div>`).join('')}
+    ${bar()}`;
+}
+
+function taxi(id) {
+  const s = id === 'hotel' ? HOTEL : DAYS.flatMap(d => d.stops).find(x => x.id === id);
+  if (!s) return home();
+  return `
+    <div class="taxi">
+      <div class="hint">Покажите этот экран водителю такси</div>
+      <div class="please">Παρακαλώ, πηγαίνετέ με εδώ:</div>
+      <div class="dest">${s.greek}</div>
+      <div class="latin">${s.latin}</div>
+      <div class="spacer"></div>
+      <button class="btn primary center" onclick="history.length > 1 ? history.back() : go('#')">✕ Закрыть</button>
+    </div>`;
+}
+
+function installHint() {
+  const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if (standalone) return '';
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  return `
+    <h3>Добавить на экран телефона</h3>
+    ${deferredPrompt ? '<button class="btn green" onclick="install()"><span class="ico">📲</span>Установить приложение</button>' : ''}
+    <div class="note">${ios
+      ? 'В Safari нажмите кнопку «Поделиться» (квадрат со стрелкой ↑) и выберите <b>«На экран „Домой“»</b>.'
+      : 'В Chrome нажмите <b>⋮</b> (три точки вверху) и выберите <b>«Установить приложение»</b> или «Добавить на главный экран».'}
+      Тогда иконка «Афины» будет на экране, и приложение откроется даже без интернета.</div>`;
+}
+
+/* ---------- router ---------- */
+function render() {
+  const [route, arg] = location.hash.replace(/^#/, '').split('/');
+  const view = {
+    day: () => day(+arg), hotel, help, words, taxi: () => taxi(arg),
+  }[route];
+  app.innerHTML = view ? view() : home();
+  if (route !== 'taxi') window.scrollTo(0, scrollMemory[location.hash] || 0);
+}
+const scrollMemory = {};
+let lastHash = location.hash;
+window.addEventListener('hashchange', () => {
+  scrollMemory[lastHash] = scrollMemory._pending ?? window.scrollY;
+  delete scrollMemory._pending;
+  lastHash = location.hash;
+  render();
+});
+// The taxi screen sits on top, so remember where we were before opening it.
+document.addEventListener('click', () => { scrollMemory._pending = window.scrollY; }, true);
+function go(h) { location.hash = h; }
+
+function toggleDone(id) {
+  done[id] = !done[id];
+  save(doneKey, done);
+  const y = window.scrollY;
+  render();
+  window.scrollTo(0, y);
+}
+function toggleBig() {
+  const big = document.documentElement.classList.toggle('big');
+  save('athens-big', big);
+  render();
+}
+
+/* ---------- PWA ---------- */
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; if (!location.hash) render(); });
+async function install() { if (!deferredPrompt) return; deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; render(); }
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+
+render();
+</script>
+</body>
+</html>
